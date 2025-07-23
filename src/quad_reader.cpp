@@ -128,6 +128,13 @@ void QuadReader::dumpObjFiles() {
         for (size_t j = stream_start; j < stream_end; ++j) {
             const ResQuadStreamInfo* stream = stream_info + j;
             const ResPageFile* page_file = page_files + stream->getPageFileIndex();
+
+            // depending on some other things, one of these two may be filtered
+            // const u16 flags = stream->page_file_index_and_flags >> 0xd;
+            // if (flags == 1 || flags == 4)
+            //     continue;
+            // if (flags == 2)
+            //     continue;
             
             const u32 far_lod = (s32)node->lod_level >= quad_mesh->num_far_lod_levels ? quad_mesh->num_far_lod_levels - 1 : node->lod_level;
             const s32 num_subdivisions = -(far_lod - node->lod_level);
@@ -148,10 +155,9 @@ void QuadReader::dumpObjFiles() {
 
             for (s32 i = 0; i < stream->num_quads; ++i) {
                 for (const auto idx : indices) {
-                    data.vertices.push_back(
-                    processVertex(reinterpret_cast<const u32*>(page_file_data.data()),
-                                  mIndexBuffer[base_index + idx + i * 96] + (stream->base_vertex_index << 10),
-                                  node, &quad_mesh->normal_lod_layout, quad_mesh->single_bounds.min, sidelength));
+                    data.vertices.push_back(processVertex(reinterpret_cast<const u32*>(page_file_data.data()),
+                                            mIndexBuffer[base_index + idx + i * 96] + (stream->base_vertex_index << 10),
+                                            node, &quad_mesh->normal_lod_layout, quad_mesh->single_bounds.min, sidelength));
                 }
             
                 for (s32 y = 0; y < 4; ++y) {
