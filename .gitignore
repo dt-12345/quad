@@ -1,0 +1,5 @@
+*.obj
+build/*
+build_vs/*
+.vscode/*
+*.7z
