@@ -23,10 +23,10 @@ layout (binding = 0, std140) uniform _support_buffer
 } support_buffer;
 
 /* cave_StaticDataUBO */
-layout (binding = 15, std140) uniform _cTex_SkyInscatter
+layout (binding = 15, std140) uniform _gsys_user0
 {
     precise vec4 data[4096];
-} static_data_ubo; // cTex_SkyInscatter
+} static_data_ubo; // gsys_user0
 
 /* Context */
 layout (binding = 5, std140) uniform _gsys_context

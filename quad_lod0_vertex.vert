@@ -153,7 +153,6 @@ void main() {
     int num_verts_per_side = max_coord + 1; // 5
     int temp_142 = 0;
     int temp_25 = 0;
-    uint temp_157 = uint(vertex_y);
     // adjusted 2d coordinates of vertex on quad
     int adjusted_x;
     int adjusted_y;
