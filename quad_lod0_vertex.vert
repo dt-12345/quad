@@ -136,7 +136,7 @@ void main() {
     gl_Position.w = 1.0;
 
     // this is the actual quad index, bottom 10 bits are two 5 bit values
-    int quad_index = bitfieldExtract(gl_VertexIndex, 10, 22);
+    int quad_index = bitfieldExtract(gl_VertexID, 10, 22);
 
     int index0 = int(uint(quad_index << 2 + page_layout_data.corner_data_offset) >> 2); // this section is 4 byte entries
     uint corner_positions = page_file_data.data[index0];
@@ -148,8 +148,8 @@ void main() {
     int far_lod_threshold = instance_data.num_lod - 1;  // 2
     int max_coord = 1 << (far_lod_threshold & 31); // 4
     // these are the 2d positions of the current vertex on the current quad
-    int vertex_x = int(bitfieldExtract(gl_VertexIndex, 0, 5));
-    int vertex_y = int(bitfieldExtract(gl_VertexIndex, 5, 5));
+    int vertex_x = int(bitfieldExtract(gl_VertexID, 0, 5));
+    int vertex_y = int(bitfieldExtract(gl_VertexID, 5, 5));
     int num_verts_per_side = max_coord + 1; // 5
     int temp_142 = 0;
     int temp_25 = 0;

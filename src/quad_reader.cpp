@@ -153,24 +153,24 @@ void QuadReader::dumpObjFiles() {
                 74, 80, 86, 92, 95
             };
 
-            for (s32 i = 0; i < stream->num_quads; ++i) {
+            for (s32 k = 0; k < stream->num_quads; ++k) {
                 for (const auto idx : indices) {
                     data.vertices.push_back(processVertex(reinterpret_cast<const u32*>(page_file_data.data()),
-                                            mIndexBuffer[base_index + idx + i * 96] + (stream->base_vertex_index << 10),
+                                            mIndexBuffer[base_index + idx + k * 96] + (stream->base_vertex_index << 10),
                                             node, &quad_mesh->normal_lod_layout, quad_mesh->single_bounds.min, sidelength));
                 }
             
                 for (s32 y = 0; y < 4; ++y) {
                     for (s32 x = 0; x < 4; ++x) {
                         data.triangles.emplace_back(Triangle{
-                            x       + y * 5         + i * 25,
-                            x + 1   + y * 5         + i * 25,
-                            x       + (y + 1) * 5   + i * 25
+                            x       + y * 5         + k * 25,
+                            x + 1   + y * 5         + k * 25,
+                            x       + (y + 1) * 5   + k * 25
                         });
                         data.triangles.emplace_back(Triangle{
-                            x       + (y + 1) * 5   + i * 25,
-                            x + 1   + y * 5         + i * 25,
-                            x + 1   + (y + 1) * 5   + i * 25
+                            x       + (y + 1) * 5   + k * 25,
+                            x + 1   + y * 5         + k * 25,
+                            x + 1   + (y + 1) * 5   + k * 25
                         });
                     }
                 }
@@ -182,7 +182,7 @@ void QuadReader::dumpObjFiles() {
             //     data.vertices.push_back(
             //         processVertex(reinterpret_cast<const u32*>(page_file_data.data()),
             //                       mIndexBuffer[base_index + i] + (stream->base_vertex_index << 10),
-            //                       node, &quad_mesh->normal_lod_layout, sidelength));
+            //                       node, &quad_mesh->normal_lod_layout, quad_mesh->single_bounds.min, sidelength));
 
             //     if (i % 3 == 2)
             //         data.triangles.emplace_back(Triangle{i - 2, i - 1, i});

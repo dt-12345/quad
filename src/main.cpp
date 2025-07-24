@@ -3,11 +3,8 @@
 #include <cstring>
 
 const std::string ParseInput(int argc, char** argv, int index) {
-    static std::string null_string = "";
-
-    if (argc < 2 + index) {
-        return null_string;
-    }
+    if (argc < 2 + index)
+        return "";
 
     size_t size = strnlen(argv[1 + index], 0x1000);
     std::string value{argv[1 + index], argv[1 + index] + size};
