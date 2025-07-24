@@ -5,6 +5,18 @@
 #include <array>
 #include <iostream>
 
+static int bitfieldExtract(int i, int start, int length) {
+    int mask = (1 << length) - 1;
+    int extracted = (i >> start) & mask;
+    
+    int sign_bit = 1 << (length - 1);
+    if (extracted & sign_bit) {
+        extracted -= (1 << length);
+    }
+    
+    return extracted;
+}
+
 // assume lod 5 regardless
 Vec3f QuadReader::processVertex(const u32* page_file_data, u32 index, const ResNode* node, const ResPageFileLayout* layout, const Vec3f& base, f32 sidelength) {
     const s32 quad_index = index >> 10;
@@ -48,11 +60,10 @@ Vec3f QuadReader::processVertex(const u32* page_file_data, u32 index, const ResN
     const u32 pos_adjust_flags = page_file_data[byte_offset / sizeof(u32)];
     const u32 adjust_shift = (pos_flags >> 18) & 0x1f;
 
-    const f32 x = (f32)((((node->x >> 2 << 5) + (pos_flags & 0x3f)) << 13) - 0x20000 + ((pos_adjust_flags & 0x7ff) << adjust_shift));
-    const f32 y = (f32)((((node->y >> 2 << 5) + (pos_flags >> 6 & 0x3f)) << 13) - 0x20000 + ((pos_adjust_flags >> 11 & 0x3ff) << 1 << adjust_shift));
-    const f32 z = (f32)((((node->z >> 2 << 5) + (pos_flags >> 12 & 0x3f)) << 13) - 0x20000 + ((pos_adjust_flags >> 21 & 0x7ff) << adjust_shift));
-
-    return Vec3(x * sidelength + base.x, y * sidelength + base.y, z * sidelength + base.z);
+    const f32 x = (f32)((((node->x >> 2 << 5) + (pos_flags & 0x3f)) << 13) - 0x20000 + (bitfieldExtract(pos_adjust_flags,0,11) << adjust_shift));
+    const f32 y = (f32)((((node->y >> 2 << 5) + (pos_flags >> 6 & 0x3f)) << 13) - 0x20000 + ((bitfieldExtract(pos_adjust_flags,11,10) << 1) << adjust_shift));
+    const f32 z = (f32)((((node->z >> 2 << 5) + (pos_flags >> 12 & 0x3f)) << 13) - 0x20000 + (bitfieldExtract(pos_adjust_flags,21,11) << adjust_shift));
+    return Vec3(x * sidelength + base.x, y * sidelength + base.y, z * sidelength + base.z); 
 }
 
 static void writeQuad(u32*& buffer, s32 x, s32 y, s32 index) {
